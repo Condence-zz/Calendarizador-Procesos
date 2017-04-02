@@ -1,7 +1,9 @@
+import java.util.Arrays;
+import java.util.Collections;
+import static java.util.Comparator.comparing;
+import java.util.List;
+
 public class Calendarizador {
-<<<<<<< HEAD
-    Tareas tareas = new Tareas();
-=======
     
     private Proceso[] procesos = Tareas.getProcesos();
     private Memoria[] bloquesMemoria;
@@ -24,9 +26,25 @@ public class Calendarizador {
         }
     }
   
->>>>>>> refactor
     public void cambiarEstado(int i, String estado){
-        tareas.getProceso(i).setEstado(estado);
+        Tareas.getProceso(i).setEstado(estado);
+    }
+    
+    public Proceso[] getProcesos()
+    {
+        return procesos;
+    }
+    
+    public Memoria[] getBloquesMemoria()
+    {
+        return bloquesMemoria;
+    }
+    
+        public Memoria[] getBloquesMemoriaOrdenados()
+    {
+        List<Memoria> listaMemoriaOrdenada = Arrays.asList(bloquesMemoria);
+        Collections.sort(listaMemoriaOrdenada, comparing((t) -> t.proceso.Tiempo));
+        return listaMemoriaOrdenada.toArray(bloquesMemoria);
     }
       
     private boolean tieneEstado(Proceso proceso, String estado)
