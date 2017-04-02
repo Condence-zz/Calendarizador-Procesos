@@ -1,11 +1,29 @@
 public class main{ 
     public static void main(String args[]){
         Calendarizador calendarizador = new Calendarizador();
-        Memoria memoria = new Memoria();
-        Tareas tareas = new Tareas();
-        Proceso procesos = new Proceso();
-        for (int i = 0; i < 10; i++) {
-            System.out.println(tareas.getProceso(i).getEstado());
+        
+        System.out.println("Tareas");
+
+        for(Proceso proceso : calendarizador.getProcesos())
+        {
+            System.out.println(proceso.getEstado());
         }
+        
+        calendarizador.inicializarBloquesMemoria();
+        
+        System.out.println("Lista de procesos asignados a memoria");
+        
+        for(Memoria memoria : calendarizador.getBloquesMemoria())
+        {
+            System.out.println(memoria.proceso.getTiempo());
+        }
+        
+        System.out.println("Lista ordenada de procesos asignados a memoria");
+        
+        for(Memoria memoria : calendarizador.getBloquesMemoriaOrdenados())
+        {
+            System.out.println(memoria.proceso.getTiempo());
+        }
+        
     }
 }
