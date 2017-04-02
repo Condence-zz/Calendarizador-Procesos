@@ -3,9 +3,9 @@ public class main{
         Calendarizador calendarizador = new Calendarizador();
         Memoria memoria = new Memoria();
         Tareas tareas = new Tareas();
-        Procesos procesos = new Procesos();
+        Proceso procesos = new Proceso();
         for (int i = 0; i < 10; i++) {
-            System.out.println(tareas.getTarea(i).getEstado());
+            System.out.println(tareas.getProceso(i).getEstado());
         }
     }
 }
