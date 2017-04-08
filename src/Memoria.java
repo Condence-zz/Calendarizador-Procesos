@@ -34,4 +34,10 @@ public class Memoria {
     public void setProceso(Proceso proceso) {
         this.proceso = proceso;
     }
+    
+    @Override
+    public String toString()
+    {
+        return "Bloque: " + bloque + " Tamaño: " + tamano;
+    }
 }

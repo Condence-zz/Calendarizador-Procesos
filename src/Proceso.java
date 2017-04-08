@@ -42,6 +42,12 @@ public class Proceso {
 
     public void setEstado(String Estado) {
         this.Estado = Estado;
-    } 
+    }
+    
+    @Override
+    public String toString()
+    {
+        return Num + " " + "Tamano: " + Tamano + " Estado: " + Estado + " Tiempo: " + Tiempo;
+    }
     
 }
