@@ -1,3 +1,4 @@
+import java.util.Comparator;
 public class Proceso {
     public int Num, Tiempo, Tamano;
     public String Estado; 
@@ -44,6 +45,15 @@ public class Proceso {
         this.Estado = Estado;
     }
     
+    public static Comparator<Proceso> OrdTiempo = new Comparator<Proceso>() {
+
+        @Override
+	public int compare(Proceso s1, Proceso s2) {
+
+	   int rollno1 = s1.getTiempo();
+	   int rollno2 = s2.getTiempo(); 
+	   return rollno1-rollno2; 
+    }};
     @Override
     public String toString()
     {
