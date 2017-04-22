@@ -27,6 +27,7 @@ public class Calendarizador {
                 {
                     proceso.setEstado(Constantes.ASIGNADO);
                     bloquesMemoria[i].setProceso(proceso);
+                    System.out.format("Proceso asignado en memoria PROCESO: %d\n",proceso.getNum());
                     break;
                 }
             }
