@@ -11,6 +11,9 @@ public class Calendarizador {
     private final Proceso[] procesos = Tareas.getProcesos();
     private Memoria[] bloquesMemoria;
     private int procesosTotalesTerminados = 0;
+    private int procesandoActual = 0;
+    private boolean seResto = false;
+    int procesando = 0;
     
     public void inicializarBloquesMemoria()
     {
@@ -36,12 +39,9 @@ public class Calendarizador {
     
     public void procesar()
     {
-        boolean ordernarProceso = false;
         try 
         {
-            int procesosTerminados = 0;
-            
-            for (Memoria memoria : bloquesMemoria)
+            for(int i=0;i<bloquesMemoria.length;i++)
             {
                 if (procesosTotalesTerminados == 25)
                 {
@@ -49,21 +49,31 @@ public class Calendarizador {
                     return;
                 }
                 
-                Thread.sleep(500);
+                Thread.sleep(1);
+                
+                if (bloquesMemoria[i] == null || bloquesMemoria[i].proceso == null)
+                {
+                    seResto = false;
+                    break;
+                }
+                
+                Proceso procesoActual = bloquesMemoria[i].proceso;
+                procesando = procesoActual.getNum();
+                if((procesandoActual == procesando) && (procesandoActual != 0) && seResto)
+                {
+                    continue;
+                }
+                procesandoActual = procesando;
 
-                int procesando = 0;
-                procesando = memoria.proceso.getNum();
                 
                 System.out.println("=====================================");
                 System.out.println("Procesando: " + procesando);
-                
-                procesosTerminados++;
                 
                 Proceso procesoSiguiente = getSiguienteProceso(procesando);
                     
                 if (procesoSiguiente != null)
                 {
-                    if ( procesosTotalesTerminados == 25)
+                    if (procesosTotalesTerminados == 25)
                     {
                         System.out.println("Siguiente: ninguno");
                     }
@@ -72,15 +82,17 @@ public class Calendarizador {
                         System.out.println("Siguiente: " + procesoSiguiente.getNum());
                     }
                 }  
-                if (memoria.proceso.getTiempo() <= Constantes.QUANTUM) {
-                    memoria.proceso = null;
+                
+                if (procesoActual.getTiempo() <= Constantes.QUANTUM) {
+                    bloquesMemoria[i].proceso = null;
                     terminarProceso(procesando);
-                    ordernarProceso = true;
                     procesosTotalesTerminados++;
                     rellenarBloque();
+                    seResto = false;
                 } else { 
-                    ordernarProceso = false;
-                    memoria.proceso.setTiempo(memoria.proceso.getTiempo()-Constantes.QUANTUM);
+                    bloquesMemoria[i].proceso.setTiempo(bloquesMemoria[i].proceso.getTiempo()-Constantes.QUANTUM);
+                    System.out.println("Quantum aplicado, el proceso no se terminó");
+                    seResto = true;
                 } 
                 System.out.println("Total procesados: " + procesosTotalesTerminados); 
                 break;
@@ -89,10 +101,12 @@ public class Calendarizador {
         catch (InterruptedException ex) {
             Logger.getLogger(Calendarizador.class.getName()).log(Level.SEVERE, null, ex);
          }
-         
-        if (ordernarProceso == true) {
-            bloquesMemoria = getBloquesMemoriaOrdenados(); 
-        } 
+        
+        if(seResto == false)
+        {
+            bloquesMemoria = getBloquesMemoriaOrdenados();
+            System.out.println("Reordenando...");
+        }
         procesar();
     }
     private void terminarProceso(int id)
