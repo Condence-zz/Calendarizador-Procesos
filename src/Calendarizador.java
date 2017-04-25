@@ -49,13 +49,6 @@ public class Calendarizador {
                 }
                 
                 Thread.sleep(500);
-                
-                if (procesosTerminados == 2)
-                {
-                    System.out.println("Reordenando...");
-                    Thread.sleep(1000);
-                    break;
-                }
 
                 int procesando = 0;
                 procesando = memoria.proceso.getNum();
@@ -64,13 +57,12 @@ public class Calendarizador {
                 System.out.println("Procesando: " + procesando);
                 
                 procesosTerminados++;
-                 
                 
                 Proceso procesoSiguiente = getSiguienteProceso(procesando);
                     
                 if (procesoSiguiente != null)
                 {
-                    if (procesosTerminados == 2 || procesosTotalesTerminados == 25)
+                    if ( procesosTotalesTerminados == 25)
                     {
                         System.out.println("Siguiente: ninguno");
                     }
@@ -82,11 +74,13 @@ public class Calendarizador {
                 if (memoria.proceso.getTiempo() <= Constantes.QUANTUM) {
                     memoria.proceso = null;
                     terminarProceso(procesando);
+                    procesosTotalesTerminados++;
                     rellenarBloque();
                 } else { 
                     memoria.proceso.setTiempo(memoria.proceso.getTiempo()-Constantes.QUANTUM);
                 } 
                 System.out.println("Total procesados: " + procesosTotalesTerminados); 
+                break;
             }
         }
         catch (InterruptedException ex) {
@@ -105,7 +99,6 @@ public class Calendarizador {
                 continue;
             }
             proceso.setEstado(Constantes.TERMINADO);
-            procesosTotalesTerminados++;
             return;
         }
     }
@@ -169,6 +162,11 @@ public class Calendarizador {
             }
             
             if(bloquesMemoria.length == i && bloquesMemoria[i+1].proceso != null)
+            {
+                continue;
+            }
+            
+            if(bloquesMemoria[i+1] == null)
             {
                 continue;
             }

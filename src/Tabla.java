@@ -2,6 +2,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -74,14 +75,7 @@ public class Tabla extends javax.swing.JFrame {
          
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
          
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {  
-                {0, null, null, null}
-            }, 
-            new String [] {
-                "Num", "Tiempo", "Tamaño", "Estado"
-            }
-        ));
+        jTable1.setModel(getTableModelProcesos(Tareas.getProcesos()));
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -154,8 +148,21 @@ public class Tabla extends javax.swing.JFrame {
         {
             System.out.println(proceso.toString());
         }
+    }
     
-         
+    private DefaultTableModel getTableModelProcesos(Proceso[] procesos)
+    {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Num");
+        model.addColumn("Estado");
+        model.addColumn("Tiempo");
+        model.addColumn("Tamaño");
+        for (Proceso proceso : procesos) {
+            Object[] fila = {proceso.getNum(), proceso.getEstado(), proceso.getTiempo(),
+                proceso.getTamano()};
+            model.addRow(fila);
+        }
+	return model;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
