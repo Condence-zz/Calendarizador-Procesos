@@ -36,6 +36,7 @@ public class Calendarizador {
     
     public void procesar()
     {
+        boolean ordernarProceso = false;
         try 
         {
             int procesosTerminados = 0;
@@ -74,9 +75,11 @@ public class Calendarizador {
                 if (memoria.proceso.getTiempo() <= Constantes.QUANTUM) {
                     memoria.proceso = null;
                     terminarProceso(procesando);
+                    ordernarProceso = true;
                     procesosTotalesTerminados++;
                     rellenarBloque();
                 } else { 
+                    ordernarProceso = false;
                     memoria.proceso.setTiempo(memoria.proceso.getTiempo()-Constantes.QUANTUM);
                 } 
                 System.out.println("Total procesados: " + procesosTotalesTerminados); 
@@ -86,8 +89,10 @@ public class Calendarizador {
         catch (InterruptedException ex) {
             Logger.getLogger(Calendarizador.class.getName()).log(Level.SEVERE, null, ex);
          }
-        
-        bloquesMemoria = getBloquesMemoriaOrdenados();
+         
+        if (ordernarProceso == true) {
+            bloquesMemoria = getBloquesMemoriaOrdenados(); 
+        } 
         procesar();
     }
     private void terminarProceso(int id)
