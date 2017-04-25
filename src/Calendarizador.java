@@ -64,7 +64,7 @@ public class Calendarizador {
                 System.out.println("Procesando: " + procesando);
                 
                 procesosTerminados++;
-                procesosTotalesTerminados++;
+                 
                 
                 Proceso procesoSiguiente = getSiguienteProceso(procesando);
                     
@@ -79,14 +79,13 @@ public class Calendarizador {
                         System.out.println("Siguiente: " + procesoSiguiente.getNum());
                     }
                 }  
-                if (Constantes.QUANTUM <= memoria.proceso.getTiempo()) {
+                if (memoria.proceso.getTiempo() <= Constantes.QUANTUM) {
                     memoria.proceso = null;
                     terminarProceso(procesando);
                     rellenarBloque();
-                } else {
+                } else { 
                     memoria.proceso.setTiempo(memoria.proceso.getTiempo()-Constantes.QUANTUM);
-                }
-                
+                } 
                 System.out.println("Total procesados: " + procesosTotalesTerminados); 
             }
         }
@@ -106,6 +105,7 @@ public class Calendarizador {
                 continue;
             }
             proceso.setEstado(Constantes.TERMINADO);
+            procesosTotalesTerminados++;
             return;
         }
     }
