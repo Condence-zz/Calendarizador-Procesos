@@ -1,3 +1,5 @@
+package Backend;
+
 public final class Constantes {
     public static final String ASIGNADO = "Asignado";
     public static final String INACTIVO = "Inactivo";

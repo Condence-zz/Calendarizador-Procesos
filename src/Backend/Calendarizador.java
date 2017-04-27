@@ -1,3 +1,5 @@
+package Backend;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,7 +51,7 @@ public class Calendarizador {
                     return;
                 }
                 
-                Thread.sleep(1);
+                Thread.sleep(500);
                 
                 if (bloquesMemoria[i] == null || bloquesMemoria[i].proceso == null)
                 {

@@ -1,3 +1,5 @@
+package Backend;
+
 public class Memoria {
    
     public int bloque, tamano;

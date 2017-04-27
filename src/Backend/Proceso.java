@@ -1,3 +1,5 @@
+package Backend;
+
 import java.util.Comparator;
 public class Proceso {
     public int Num, Tiempo, Tamano;
