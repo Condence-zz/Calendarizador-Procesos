@@ -5,11 +5,14 @@
  */
 package Frontend;
 
+import Backend.Calendarizador;
+import Backend.Memoria;
 import Backend.Proceso;
 import Backend.Tareas;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.JProgressBar;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
@@ -17,24 +20,30 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author coond
  */
-public class Interfaz extends javax.swing.JFrame {
-
-    /**
-     * Creates new form main
-     */
+public class Interfaz extends javax.swing.JFrame { 
+    int procesobar;
     public Interfaz() {
         initComponents(); 
-
+        
         Timer timer = new Timer(0, new ActionListener() { 
             @Override
             public void actionPerformed(ActionEvent e) {
                 EliminarTablaTareas();
-                AgregarTablaTareas();
+                AgregarTablaTareas(); 
+                
+                BarraProgreso(); 
             }
         }); 
         timer.setDelay(100);
         timer.start();   
-    } 
+    }  
+    public void BarraProgreso(){
+        Calendarizador cal = new Calendarizador();
+        procesobar = cal.getProcesosTotalesTerminados();
+        jProgressBar1.setValue(procesobar); 
+    }
+  
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -55,6 +64,7 @@ public class Interfaz extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         jTable4 = new javax.swing.JTable();
         jl_procesos = new javax.swing.JLabel();
+        jProgressBar1 = new javax.swing.JProgressBar();
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -148,6 +158,8 @@ public class Interfaz extends javax.swing.JFrame {
 
         jl_procesos.setText("TABLA PROCESOS ORDENADOS");
 
+        jProgressBar1.setMaximum(25);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -155,17 +167,21 @@ public class Interfaz extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jl_tareas))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jl_memoria))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jl_procesos)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jl_tareas))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jl_memoria))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jl_procesos)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,10 +193,12 @@ public class Interfaz extends javax.swing.JFrame {
                     .addComponent(jl_procesos))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -205,7 +223,37 @@ public class Interfaz extends javax.swing.JFrame {
             dm.removeRow(i);
         }
     }
+    public void AgregarTablaMemoria() {
+        DefaultTableModel model = (DefaultTableModel) jTable2.getModel(); 
+        Object rowData[] = new Object[4];
+        Calendarizador bloquesMemoria= new Calendarizador(); 
+        
+        Memoria[] procesosOrdenados = bloquesMemoria.getBloquesMemoria(); 
+        for (Memoria memoria : procesosOrdenados) {
+            Object[] fila = {memoria.getBloque(),memoria.getBloque(),memoria.getBloque(),memoria.getBloque()};
+            model.addRow(fila); 
+        }  
+    } 
+    public void EliminarTablaMemoria() {
+        DefaultTableModel dm = (DefaultTableModel) jTable2.getModel();
+        int rowCount = dm.getRowCount(); 
+        for (int i = rowCount - 1; i >= 0; i--) {
+            dm.removeRow(i);
+        }
+    }
+    public void ProgressBar() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); 
+        Object rowData[] = new Object[4];
+        Proceso[] procesos = Tareas.getProcesos(); 
+        for (Proceso proceso : procesos) {
+            Object[] fila = {proceso.getNum(), proceso.getEstado(), proceso.getTiempo(),
+                proceso.getTamano()};
+            model.addRow(fila); 
+        } 
+        
+    } 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -219,7 +267,5 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JLabel jl_tareas;
     // End of variables declaration//GEN-END:variables
 
-    private void fireTableChanged(Object object) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+ 
 }

@@ -11,13 +11,20 @@ import Backend.Proceso;
 public class main { 
     public static void main(String[] args) {
         // FrontEnd
+       
         Interfaz calendarizadorUI = new Interfaz();
         calendarizadorUI.setVisible(true);
+        //¨
         calendarizadorUI.setLocationRelativeTo(null);
         Calendarizador calendarizador = new Calendarizador();
         // BackEnd
         calendarizador.inicializarBloquesMemoria(); 
         calendarizador.procesar();  
+          Calendarizador cal = new Calendarizador();
+        int progress = cal.getProcesosTotalesTerminados();
+        System.out.println(progress);
+        
+     
     }
     
 }

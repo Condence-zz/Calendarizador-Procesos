@@ -12,7 +12,7 @@ public class Calendarizador {
     
     private final Proceso[] procesos = Tareas.getProcesos();
     private Memoria[] bloquesMemoria;
-    private int procesosTotalesTerminados = 0;
+    public int procesosTotalesTerminados = 0;
     private int procesandoActual = 0;
     private boolean seResto = false;
     int procesando = 0;
@@ -26,7 +26,7 @@ public class Calendarizador {
         {
             bloquesMemoria[i] = new Memoria(i, tamanos[i], null);
             
-            for (Proceso proceso : procesos) {
+            for (Proceso proceso : procesos) { 
                 if (comparaEstado(proceso.getEstado(), Constantes.INACTIVO) &&
                     cabeEnBloque(proceso.getTamano(), bloquesMemoria[i].getTamano()))
                 {
@@ -250,4 +250,9 @@ public class Calendarizador {
     {
         return tamanoProceso <= tamanoMemoria;
     }
+
+    public int getProcesosTotalesTerminados() {
+        return procesosTotalesTerminados;
+    }
+ 
 }
