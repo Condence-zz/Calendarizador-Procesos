@@ -51,7 +51,7 @@ public class Calendarizador {
                     return;
                 }
                 
-                Thread.sleep(3000);
+                Thread.sleep(300);
                 
                 if (bloquesMemoria[i] == null || bloquesMemoria[i].proceso == null)
                 {

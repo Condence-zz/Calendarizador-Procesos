@@ -11,6 +11,8 @@ import Backend.Proceso;
 import Backend.Tareas; 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener; 
+import java.util.Arrays;
+import javax.swing.DefaultRowSorter;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,6 +23,8 @@ public class Interfaz extends javax.swing.JFrame {
     
     public Interfaz(Calendarizador calendarizador) {
         initComponents(); 
+        jTable2.getRowSorter().toggleSortOrder(0);
+        jTable4.getRowSorter().toggleSortOrder(3);
         this.calendar = calendarizador;
         Timer timer = new Timer(0, new ActionListener() { 
             @Override
@@ -111,6 +115,7 @@ public class Interfaz extends javax.swing.JFrame {
 
         jl_memoria.setText("TABLA MEMORIA");
 
+        jTable2.setAutoCreateRowSorter(true);
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -119,9 +124,16 @@ public class Interfaz extends javax.swing.JFrame {
                 "Bloque", "Tamaño ", "Proceso", "Tiempo"
             }
         ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false
             };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -135,6 +147,7 @@ public class Interfaz extends javax.swing.JFrame {
             jTable2.getColumnModel().getColumn(3).setResizable(false);
         }
 
+        jTable4.setAutoCreateRowSorter(true);
         jTable4.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -143,9 +156,16 @@ public class Interfaz extends javax.swing.JFrame {
                 "Bloque", "Tiempo", "Proceso", "Tiempo"
             }
         ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class
+            };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false
             };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -245,7 +265,7 @@ public class Interfaz extends javax.swing.JFrame {
         }
     }
     public void llenarTablaMemoriaOrdenados() {
-        Memoria[] bloquesMemoriaOrdenados = calendar.getBloquesMemoriaOrdenados();
+        Memoria[] bloquesMemoriaOrdenados = calendar.getBloquesMemoria();
         if (bloquesMemoriaOrdenados == null) return;
         DefaultTableModel model = (DefaultTableModel) jTable4.getModel(); 
         for (Memoria bloqueMemoriaOrdenados : bloquesMemoriaOrdenados) {
