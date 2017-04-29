@@ -19,9 +19,9 @@ public class Interfaz extends javax.swing.JFrame {
     Calendarizador calendar = new Calendarizador(); 
        
     
-    public Interfaz() {
+    public Interfaz(Calendarizador calendarizador) {
         initComponents(); 
-        
+        this.calendar = calendarizador;
         Timer timer = new Timer(0, new ActionListener() { 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -29,7 +29,7 @@ public class Interfaz extends javax.swing.JFrame {
                 AgregarTablaTareas();  
                 BarraProgreso();
                 EliminarTablaMemoria();
-                AgregarTablaMemoria();
+                llenarTablaMemoria();
             }
         }); 
         timer.setDelay(100);
@@ -222,16 +222,16 @@ public class Interfaz extends javax.swing.JFrame {
             dm.removeRow(i);
         }
     }
-    public void AgregarTablaMemoria() {
+    public void llenarTablaMemoria() {
+        Memoria[] bloquesMemoria = calendar.getBloquesMemoria();
+        if (bloquesMemoria == null) return;
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel(); 
-        Object rowData[] = new Object[4]; 
-        calendar.inicializarBloquesMemoria(); 
-        for (Memoria Procesos : calendar.getBloquesMemoriaOrdenados()) {
-            Object[] fila = {Procesos.getBloque(), Procesos.getBloque(), Procesos.getBloque(),
-                Procesos.getBloque()}; 
+        for (Memoria bloqueMemoria : bloquesMemoria) {
+            if (bloqueMemoria == null || bloqueMemoria.proceso == null) break;
+            Object[] fila = {bloqueMemoria.getBloque(), bloqueMemoria.getTamano(), bloqueMemoria.proceso.getNum(),
+                bloqueMemoria.proceso.getTiempo()}; 
             model.addRow(fila); 
         }
-        
     } 
     public void EliminarTablaMemoria() {
         DefaultTableModel dm = (DefaultTableModel) jTable2.getModel();

@@ -12,11 +12,13 @@ public class main {
     public static void main(String[] args) {
         // FrontEnd
        
-        Interfaz calendarizadorUI = new Interfaz();
+        Calendarizador calendarizador = new Calendarizador();
+        
+        Interfaz calendarizadorUI = new Interfaz(calendarizador);
         calendarizadorUI.setVisible(true);
         //¨
         calendarizadorUI.setLocationRelativeTo(null);
-        Calendarizador calendarizador = new Calendarizador();
+        
         // BackEnd
         calendarizador.inicializarBloquesMemoria(); 
         calendarizador.procesar();    
