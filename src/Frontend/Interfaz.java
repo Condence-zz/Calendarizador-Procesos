@@ -8,21 +8,17 @@ package Frontend;
 import Backend.Calendarizador;
 import Backend.Memoria;
 import Backend.Proceso;
-import Backend.Tareas;
-import java.awt.BorderLayout;
-import java.awt.Container;
+import Backend.Tareas; 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
+import java.awt.event.ActionListener; 
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
  
-public class Interfaz extends javax.swing.JFrame { 
-    int procesobar;
-    Calendarizador Calendar = new Calendarizador(); 
+public class Interfaz extends javax.swing.JFrame {  
+    Calendarizador calendar = new Calendarizador(); 
+       
+    
     public Interfaz() {
         initComponents(); 
         
@@ -32,7 +28,6 @@ public class Interfaz extends javax.swing.JFrame {
                 EliminarTablaTareas();
                 AgregarTablaTareas();  
                 BarraProgreso();
-                
                 EliminarTablaMemoria();
                 AgregarTablaMemoria();
             }
@@ -40,14 +35,13 @@ public class Interfaz extends javax.swing.JFrame {
         timer.setDelay(100);
         timer.start(); 
     }  
-    public void BarraProgreso(){ 
-        Calendarizador probar = new Calendarizador();   
+    public void BarraProgreso(){   
         jProgressBar1.setMinimum(0);
         jProgressBar1.setMaximum(100);
         jProgressBar1.setStringPainted(true);
         jProgressBar1.setBorder(null);
           
-        jProgressBar1.setValue(22);
+        jProgressBar1.setValue(1);
     }  
     /**
      * This method is called from within the constructor to initialize the form.
@@ -231,8 +225,8 @@ public class Interfaz extends javax.swing.JFrame {
     public void AgregarTablaMemoria() {
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel(); 
         Object rowData[] = new Object[4]; 
-        Memoria[] ProcesosOrdenados = Calendar.getBloquesMemoriaOrdenados();
-        for (Memoria Procesos : ProcesosOrdenados) {
+        calendar.inicializarBloquesMemoria(); 
+        for (Memoria Procesos : calendar.getBloquesMemoriaOrdenados()) {
             Object[] fila = {Procesos.getBloque(), Procesos.getBloque(), Procesos.getBloque(),
                 Procesos.getBloque()}; 
             model.addRow(fila); 
@@ -246,17 +240,6 @@ public class Interfaz extends javax.swing.JFrame {
             dm.removeRow(i);
         }
     }
-    public void ProgressBar() {
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); 
-        Object rowData[] = new Object[4];
-        Proceso[] procesos = Tareas.getProcesos(); 
-        for (Proceso proceso : procesos) {
-            Object[] fila = {proceso.getNum(), proceso.getEstado(), proceso.getTiempo(),
-                proceso.getTamano()};
-            model.addRow(fila); 
-        } 
-        
-    } 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;

@@ -19,12 +19,7 @@ public class main {
         Calendarizador calendarizador = new Calendarizador();
         // BackEnd
         calendarizador.inicializarBloquesMemoria(); 
-        calendarizador.procesar();  
-          Calendarizador cal = new Calendarizador();
-        int progress = cal.getProcesosTotalesTerminados();
-        System.out.println(progress);
-        
-     
+        calendarizador.procesar();    
     }
     
 }
