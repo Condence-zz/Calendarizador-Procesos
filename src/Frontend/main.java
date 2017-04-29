@@ -11,14 +11,11 @@ import Backend.Proceso;
 public class main { 
     public static void main(String[] args) {
         // FrontEnd
-       
         Calendarizador calendarizador = new Calendarizador();
-        
         Interfaz calendarizadorUI = new Interfaz(calendarizador);
         calendarizadorUI.setVisible(true);
         //¨
-        calendarizadorUI.setLocationRelativeTo(null);
-        
+        calendarizadorUI.setLocationRelativeTo(null); 
         // BackEnd
         calendarizador.inicializarBloquesMemoria(); 
         calendarizador.procesar();    

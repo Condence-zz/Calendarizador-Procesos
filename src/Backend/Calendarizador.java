@@ -51,7 +51,7 @@ public class Calendarizador {
                     return;
                 }
                 
-                Thread.sleep(500);
+                Thread.sleep(3000);
                 
                 if (bloquesMemoria[i] == null || bloquesMemoria[i].proceso == null)
                 {
@@ -92,7 +92,10 @@ public class Calendarizador {
                     rellenarBloque();
                     seResto = false;
                 } else { 
-                    bloquesMemoria[i].proceso.setTiempo(bloquesMemoria[i].proceso.getTiempo()-Constantes.QUANTUM);
+                    for (int j = 0; j < Constantes.QUANTUM; j++) {
+                        Thread.sleep(1000);
+                        bloquesMemoria[i].proceso.setTiempo(bloquesMemoria[i].proceso.getTiempo()-1);
+                    } 
                     System.out.println("Quantum aplicado, el proceso no se terminó");
                     seResto = true;
                 } 

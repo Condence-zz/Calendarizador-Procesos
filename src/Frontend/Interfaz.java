@@ -17,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
  
 public class Interfaz extends javax.swing.JFrame {  
     Calendarizador calendar = new Calendarizador(); 
-       
+    int procesobar=0;
     
     public Interfaz(Calendarizador calendarizador) {
         initComponents(); 
@@ -30,18 +30,21 @@ public class Interfaz extends javax.swing.JFrame {
                 BarraProgreso();
                 EliminarTablaMemoria();
                 llenarTablaMemoria();
+                EliminarTablaMemoriaOrdenados();
+                llenarTablaMemoriaOrdenados();
             }
         }); 
         timer.setDelay(100);
         timer.start(); 
     }  
     public void BarraProgreso(){   
+        procesobar = calendar.getProcesosTotalesTerminados();
         jProgressBar1.setMinimum(0);
-        jProgressBar1.setMaximum(100);
+        jProgressBar1.setMaximum(25);
         jProgressBar1.setStringPainted(true);
         jProgressBar1.setBorder(null);
           
-        jProgressBar1.setValue(1);
+        jProgressBar1.setValue(procesobar);
     }  
     /**
      * This method is called from within the constructor to initialize the form.
@@ -137,11 +140,11 @@ public class Interfaz extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Proceso", "Tiempo", "Restante"
+                "Bloque", "Tiempo", "Proceso", "Tiempo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -153,6 +156,7 @@ public class Interfaz extends javax.swing.JFrame {
             jTable4.getColumnModel().getColumn(0).setResizable(false);
             jTable4.getColumnModel().getColumn(1).setResizable(false);
             jTable4.getColumnModel().getColumn(2).setResizable(false);
+            jTable4.getColumnModel().getColumn(3).setResizable(false);
         }
 
         jl_procesos.setText("TABLA PROCESOS ORDENADOS");
@@ -192,10 +196,10 @@ public class Interfaz extends javax.swing.JFrame {
                     .addComponent(jl_procesos))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -240,6 +244,27 @@ public class Interfaz extends javax.swing.JFrame {
             dm.removeRow(i);
         }
     }
+    public void llenarTablaMemoriaOrdenados() {
+        Memoria[] bloquesMemoriaOrdenados = calendar.getBloquesMemoriaOrdenados();
+        if (bloquesMemoriaOrdenados == null) return;
+        DefaultTableModel model = (DefaultTableModel) jTable4.getModel(); 
+        for (Memoria bloqueMemoriaOrdenados : bloquesMemoriaOrdenados) {
+            if (bloqueMemoriaOrdenados == null || bloqueMemoriaOrdenados.proceso == null) break;
+            Object[] fila = {bloqueMemoriaOrdenados.getBloque(), 
+                bloqueMemoriaOrdenados.getTamano(),
+                bloqueMemoriaOrdenados.proceso.getNum(),
+                bloqueMemoriaOrdenados.proceso.getTiempo()}; 
+            model.addRow(fila); 
+        }
+    } 
+    public void EliminarTablaMemoriaOrdenados() {
+        DefaultTableModel dm = (DefaultTableModel) jTable4.getModel();
+        int rowCount = dm.getRowCount(); 
+        for (int i = rowCount - 1; i >= 0; i--) {
+            dm.removeRow(i);
+        }
+    }
+ 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
