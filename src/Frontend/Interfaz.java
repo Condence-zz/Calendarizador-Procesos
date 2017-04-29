@@ -9,19 +9,20 @@ import Backend.Calendarizador;
 import Backend.Memoria;
 import Backend.Proceso;
 import Backend.Tareas;
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author coond
- */
+ 
 public class Interfaz extends javax.swing.JFrame { 
     int procesobar;
+    Calendarizador Calendar = new Calendarizador(); 
     public Interfaz() {
         initComponents(); 
         
@@ -29,21 +30,25 @@ public class Interfaz extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 EliminarTablaTareas();
-                AgregarTablaTareas(); 
+                AgregarTablaTareas();  
+                BarraProgreso();
                 
-                BarraProgreso(); 
+                EliminarTablaMemoria();
+                AgregarTablaMemoria();
             }
         }); 
         timer.setDelay(100);
-        timer.start();   
+        timer.start(); 
     }  
-    public void BarraProgreso(){
-        Calendarizador cal = new Calendarizador();
-        procesobar = cal.getProcesosTotalesTerminados();
-        jProgressBar1.setValue(procesobar); 
-    }
-  
-    
+    public void BarraProgreso(){ 
+        Calendarizador probar = new Calendarizador();   
+        jProgressBar1.setMinimum(0);
+        jProgressBar1.setMaximum(100);
+        jProgressBar1.setStringPainted(true);
+        jProgressBar1.setBorder(null);
+          
+        jProgressBar1.setValue(22);
+    }  
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -225,14 +230,14 @@ public class Interfaz extends javax.swing.JFrame {
     }
     public void AgregarTablaMemoria() {
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel(); 
-        Object rowData[] = new Object[4];
-        Calendarizador bloquesMemoria= new Calendarizador(); 
-        
-        Memoria[] procesosOrdenados = bloquesMemoria.getBloquesMemoria(); 
-        for (Memoria memoria : procesosOrdenados) {
-            Object[] fila = {memoria.getBloque(),memoria.getBloque(),memoria.getBloque(),memoria.getBloque()};
+        Object rowData[] = new Object[4]; 
+        Memoria[] ProcesosOrdenados = Calendar.getBloquesMemoriaOrdenados();
+        for (Memoria Procesos : ProcesosOrdenados) {
+            Object[] fila = {Procesos.getBloque(), Procesos.getBloque(), Procesos.getBloque(),
+                Procesos.getBloque()}; 
             model.addRow(fila); 
-        }  
+        }
+        
     } 
     public void EliminarTablaMemoria() {
         DefaultTableModel dm = (DefaultTableModel) jTable2.getModel();

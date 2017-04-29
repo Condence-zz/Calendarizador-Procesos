@@ -12,7 +12,7 @@ public class Calendarizador {
     
     private final Proceso[] procesos = Tareas.getProcesos();
     private Memoria[] bloquesMemoria;
-    public int procesosTotalesTerminados = 0;
+    private int procesosTotalesTerminados = 0;
     private int procesandoActual = 0;
     private boolean seResto = false;
     int procesando = 0;
@@ -96,7 +96,7 @@ public class Calendarizador {
                     System.out.println("Quantum aplicado, el proceso no se terminó");
                     seResto = true;
                 } 
-                System.out.println("Total procesados: " + procesosTotalesTerminados); 
+                System.out.println("Total procesados: " + procesosTotalesTerminados);  
                 break;
             }
         }
@@ -251,6 +251,10 @@ public class Calendarizador {
         return tamanoProceso <= tamanoMemoria;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getProcesosTotalesTerminados() {
         return procesosTotalesTerminados;
     }
