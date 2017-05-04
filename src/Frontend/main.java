@@ -9,7 +9,7 @@ import Backend.Calendarizador;
 import Backend.Proceso;
 
 public class main { 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // FrontEnd
         Calendarizador calendarizador = new Calendarizador();
         Interfaz calendarizadorUI = new Interfaz(calendarizador);

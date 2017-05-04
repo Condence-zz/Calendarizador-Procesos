@@ -37,7 +37,7 @@ public class Calendarizador {
          
     } 
     public void procesar() throws InterruptedException {
-        Thread.sleep(5000);  
+        Thread.sleep(3000);  
         for(int i=0;i<bloquesMemoria.length;i++) {
             if (procesosTotalesTerminados == 25) {
                 System.out.println("TERMINADO.");
@@ -80,11 +80,17 @@ public class Calendarizador {
                 seResto = false;
             } else { 
                 for (int j = 0; j < Constantes.QUANTUM; j++) { 
+                    Thread.sleep(1000);
                     bloquesMemoria[i].proceso.setTiempo(bloquesMemoria[i].proceso.getTiempo()-1);
                 } 
                 setTxtGuardandoContexto(bloquesMemoria[i].proceso.getNum());
+                
+                
                 System.out.println("Quantum aplicado, el proceso no se terminó");
+                
+                
                 seResto = true;
+                continue;
             } 
             System.out.println("Total procesados: " + procesosTotalesTerminados);  
             break;
@@ -108,22 +114,17 @@ public class Calendarizador {
         }
          
     }
-    private void rellenarBloque()
-    {
-        for(Memoria memoria : bloquesMemoria)
-        {
-            if (memoria == null)
-            {
+    private void rellenarBloque() {
+        for(Memoria memoria : bloquesMemoria) {
+            if (memoria == null) {
                 continue;
             }
             
-            if (memoria.proceso != null)
-            {
+            if (memoria.proceso != null) {
                 continue;
             }
             
-            for(Proceso proceso : procesos)
-            {
+            for(Proceso proceso : procesos) {
                 if (comparaEstado(proceso.getEstado(), Constantes.EN_ESPERA) ||
                     comparaEstado(proceso.getEstado(), Constantes.INACTIVO) &&
                     cabeEnBloque(proceso.getTamano(), memoria.getTamano()))
@@ -268,8 +269,7 @@ public class Calendarizador {
     }
     public void setTxtCargandoContexto(int TxtCargandoContexto) {
         this.TxtCargandoContexto = TxtCargandoContexto;
-    }
-    
+    } 
     public int getTxtCargandoContexto() {
         return TxtCargandoContexto;
     }
