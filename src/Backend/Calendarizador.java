@@ -60,6 +60,7 @@ public class Calendarizador {
 
             System.out.println("=====================================");
             System.out.println("Procesando: " + procesando);
+            setTxtProcesando(procesando);
 
 
             Proceso procesoSiguiente = getSiguienteProceso(procesando);
@@ -68,7 +69,9 @@ public class Calendarizador {
                 if (procesosTotalesTerminados == 25) {
                     System.out.println("Siguiente: ninguno");
                 } else {
+                     
                     System.out.println("Siguiente: " + procesoSiguiente.getNum());  
+                    setTxtSiguienteProceso(procesoSiguiente.getNum());
                 }
             }  
 
@@ -82,10 +85,8 @@ public class Calendarizador {
                 for (int j = 0; j < Constantes.QUANTUM; j++) { 
                     Thread.sleep(1000);
                     bloquesMemoria[i].proceso.setTiempo(bloquesMemoria[i].proceso.getTiempo()-1);
-                } 
-                setTxtGuardandoContexto(bloquesMemoria[i].proceso.getNum());
-                
-                
+                    setTxtGuardandoContexto(bloquesMemoria[i].proceso.getNum());
+                }  
                 System.out.println("Quantum aplicado, el proceso no se terminó");
                 
                 
