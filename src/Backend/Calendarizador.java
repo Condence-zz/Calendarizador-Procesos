@@ -10,26 +10,22 @@ import java.util.logging.Logger;
 
 public class Calendarizador {
     
-    private final Proceso[] procesos = Tareas.getProcesos();
+    private final Proceso[] procesos = Tareas.getProcesos(); 
     private Memoria[] bloquesMemoria;
+    private int txtSiguienteProceso=0, TxtProcesando=0,TxtGuardandoContexto=0,TxtCargandoContexto=0;
     private int procesosTotalesTerminados = 0;
     private int procesandoActual = 0;
     private boolean seResto = false;
     int procesando = 0;
     
-    public void inicializarBloquesMemoria()
-    {
+    public void inicializarBloquesMemoria() {
         int tamanos[] = {9500, 7000, 4500, 8500, 3000, 9000, 1000, 5500, 1500, 500};
-        bloquesMemoria = new Memoria[10];
-        
-        for (int i=0;i<bloquesMemoria.length;i++)
-        {
-            bloquesMemoria[i] = new Memoria(i, tamanos[i], null);
-            
+        bloquesMemoria = new Memoria[10]; 
+        for (int i=0;i<bloquesMemoria.length;i++) {
+            bloquesMemoria[i] = new Memoria(i, tamanos[i], null); 
             for (Proceso proceso : procesos) { 
                 if (comparaEstado(proceso.getEstado(), Constantes.INACTIVO) &&
-                    cabeEnBloque(proceso.getTamano(), bloquesMemoria[i].getTamano()))
-                {
+                    cabeEnBloque(proceso.getTamano(), bloquesMemoria[i].getTamano())) {
                     proceso.setEstado(Constantes.ASIGNADO);
                     bloquesMemoria[i].setProceso(proceso);
                     System.out.format("Proceso asignado en memoria PROCESO: %d\n",proceso.getNum());
@@ -37,94 +33,80 @@ public class Calendarizador {
                 }
             }
         }
-    }
-    
-    public void procesar()
-    {
-        try 
-        {
-            for(int i=0;i<bloquesMemoria.length;i++)
-            {
-                if (procesosTotalesTerminados == 25)
-                {
-                    System.out.println("TERMINADO.");
-                    return;
-                }
-                
-                Thread.sleep(300);
-                
-                if (bloquesMemoria[i] == null || bloquesMemoria[i].proceso == null)
-                {
-                    seResto = false;
-                    break;
-                }
-                
-                Proceso procesoActual = bloquesMemoria[i].proceso;
-                procesando = procesoActual.getNum();
-                if((procesandoActual == procesando) && (procesandoActual != 0) && seResto)
-                {
-                    continue;
-                }
-                procesandoActual = procesando;
+        bloquesMemoria = getBloquesMemoriaOrdenados();
+         
+    } 
+    public void procesar() throws InterruptedException {
+        Thread.sleep(5000);  
+        for(int i=0;i<bloquesMemoria.length;i++) {
+            if (procesosTotalesTerminados == 25) {
+                System.out.println("TERMINADO.");
+                return;
+            }
 
-                
-                System.out.println("=====================================");
-                System.out.println("Procesando: " + procesando);
-                
-                Proceso procesoSiguiente = getSiguienteProceso(procesando);
-                    
-                if (procesoSiguiente != null)
-                {
-                    if (procesosTotalesTerminados == 25)
-                    {
-                        System.out.println("Siguiente: ninguno");
-                    }
-                    else
-                    {
-                        System.out.println("Siguiente: " + procesoSiguiente.getNum());
-                    }
-                }  
-                
-                if (procesoActual.getTiempo() <= Constantes.QUANTUM) {
-                    bloquesMemoria[i].proceso = null;
-                    terminarProceso(procesando);
-                    procesosTotalesTerminados++;
-                    rellenarBloque();
-                    seResto = false;
-                } else { 
-                    for (int j = 0; j < Constantes.QUANTUM; j++) {
-                        Thread.sleep(1000);
-                        bloquesMemoria[i].proceso.setTiempo(bloquesMemoria[i].proceso.getTiempo()-1);
-                    } 
-                    System.out.println("Quantum aplicado, el proceso no se terminó");
-                    seResto = true;
-                } 
-                System.out.println("Total procesados: " + procesosTotalesTerminados);  
+            if (bloquesMemoria[i] == null || bloquesMemoria[i].proceso == null) {
+                seResto = false;
                 break;
             }
-        }
-        catch (InterruptedException ex) {
-            Logger.getLogger(Calendarizador.class.getName()).log(Level.SEVERE, null, ex);
-         }
+            
+            Proceso procesoActual = bloquesMemoria[i].proceso;
+            procesando = procesoActual.getNum();
+             
+            if((procesandoActual == procesando) && (procesandoActual != 0) && seResto) {
+                continue;
+            }
+            procesandoActual = procesando;
+
+
+            System.out.println("=====================================");
+            System.out.println("Procesando: " + procesando);
+
+
+            Proceso procesoSiguiente = getSiguienteProceso(procesando);
+
+            if (procesoSiguiente != null) {
+                if (procesosTotalesTerminados == 25) {
+                    System.out.println("Siguiente: ninguno");
+                } else {
+                    System.out.println("Siguiente: " + procesoSiguiente.getNum());  
+                }
+            }  
+
+            if (procesoActual.getTiempo() <= Constantes.QUANTUM) {
+                bloquesMemoria[i].proceso = null;
+                terminarProceso(procesando);
+                procesosTotalesTerminados++;
+                rellenarBloque();
+                seResto = false;
+            } else { 
+                for (int j = 0; j < Constantes.QUANTUM; j++) { 
+                    bloquesMemoria[i].proceso.setTiempo(bloquesMemoria[i].proceso.getTiempo()-1);
+                } 
+                setTxtGuardandoContexto(bloquesMemoria[i].proceso.getNum());
+                System.out.println("Quantum aplicado, el proceso no se terminó");
+                seResto = true;
+            } 
+            System.out.println("Total procesados: " + procesosTotalesTerminados);  
+            break;
+        } 
         
-        if(seResto == false)
-        {
+        if(seResto == false) {
             bloquesMemoria = getBloquesMemoriaOrdenados();
             System.out.println("Reordenando...");
         }
-        procesar();
-    }
-    private void terminarProceso(int id)
-    {
+        procesar();  
+    } 
+    private void terminarProceso(int id) { 
         for(Proceso proceso : procesos)
         {
             if(proceso == null || proceso.Num != id)
             {
                 continue;
             }
-            proceso.setEstado(Constantes.TERMINADO);
+            proceso.setEstado(Constantes.TERMINADO); 
             return;
         }
+         
     }
     private void rellenarBloque()
     {
@@ -258,8 +240,38 @@ public class Calendarizador {
      *
      * @return
      */
+    
+    public int getTxtSiguienteProceso() {
+        return txtSiguienteProceso;
+    }
+
+    public void setTxtSiguienteProceso(int txtSiguienteProceso) {
+        this.txtSiguienteProceso = txtSiguienteProceso;
+    }
+    public int getTxtProcesando() {
+        return TxtProcesando;
+    }
+
+    public void setTxtProcesando(int TxtProcesando) {
+        this.TxtProcesando = TxtProcesando;
+    }
+    
     public int getProcesosTotalesTerminados() {
         return procesosTotalesTerminados;
+    }
+    public void setTxtGuardandoContexto(int TxtGuardandoContexto) {
+        this.TxtGuardandoContexto = TxtGuardandoContexto;
+    }
+    
+    public int getTxtGuardandoContexto() {
+        return TxtGuardandoContexto;
+    }
+    public void setTxtCargandoContexto(int TxtCargandoContexto) {
+        this.TxtCargandoContexto = TxtCargandoContexto;
+    }
+    
+    public int getTxtCargandoContexto() {
+        return TxtCargandoContexto;
     }
  
 }

@@ -3,7 +3,7 @@ package Backend;
 import java.util.Arrays;
 import java.util.Collections;
 public class Tareas { 
-    private static Proceso[] procesos;
+    private static Proceso[] procesos; 
     public static Proceso[] getProcesos() {
         if (procesos == null) {
             procesos = new Proceso[25]; 
@@ -37,6 +37,7 @@ public class Tareas {
         } 
         return procesos;
     } 
+    
     public static Proceso getProceso(int p) {
         return procesos[p];
     }
