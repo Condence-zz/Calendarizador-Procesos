@@ -12,7 +12,7 @@ public class Calendarizador {
     
     private final Proceso[] procesos = Tareas.getProcesos(); 
     private Memoria[] bloquesMemoria;
-    private int txtSiguienteProceso=0, TxtProcesando=0,TxtGuardandoContexto=0,TxtCargandoContexto=0;
+    private String txtSiguienteProceso, TxtProcesando,TxtGuardandoContexto,TxtCargandoContexto;
     private int procesosTotalesTerminados = 0;
     private int procesandoActual = 0;
     private boolean seResto = false;
@@ -37,8 +37,13 @@ public class Calendarizador {
          
     } 
     public void procesar() throws InterruptedException {
-        Thread.sleep(3000);  
+        
+        
+        Thread.sleep(200);  
         for(int i=0;i<bloquesMemoria.length;i++) {
+            setTxtProcesando("");
+            setTxtSiguienteProceso("");
+            setTxtSiguienteProceso("");
             if (procesosTotalesTerminados == 25) {
                 System.out.println("TERMINADO.");
                 return;
@@ -60,7 +65,7 @@ public class Calendarizador {
 
             System.out.println("=====================================");
             System.out.println("Procesando: " + procesando);
-            setTxtProcesando(procesando);
+            setTxtProcesando(String.valueOf(procesando));
 
 
             Proceso procesoSiguiente = getSiguienteProceso(procesando);
@@ -71,7 +76,7 @@ public class Calendarizador {
                 } else {
                      
                     System.out.println("Siguiente: " + procesoSiguiente.getNum());  
-                    setTxtSiguienteProceso(procesoSiguiente.getNum());
+                    setTxtSiguienteProceso(String.valueOf(procesoSiguiente.getNum()));
                 }
             }  
 
@@ -83,9 +88,9 @@ public class Calendarizador {
                 seResto = false;
             } else { 
                 for (int j = 0; j < Constantes.QUANTUM; j++) { 
+                    setTxtGuardandoContexto(String.valueOf(bloquesMemoria[i].proceso.getNum()));
                     Thread.sleep(1000);
                     bloquesMemoria[i].proceso.setTiempo(bloquesMemoria[i].proceso.getTiempo()-1);
-                    setTxtGuardandoContexto(bloquesMemoria[i].proceso.getNum());
                 }  
                 System.out.println("Quantum aplicado, el proceso no se terminó");
                 
@@ -101,7 +106,8 @@ public class Calendarizador {
             bloquesMemoria = getBloquesMemoriaOrdenados();
             System.out.println("Reordenando...");
         }
-        procesar();  
+        procesar(); 
+        setTxtGuardandoContexto("");
     } 
     private void terminarProceso(int id) { 
         for(Proceso proceso : procesos)
@@ -242,36 +248,51 @@ public class Calendarizador {
      *
      * @return
      */
+//    
+//    public int getTxtSiguienteProceso() {
+//        return txtSiguienteProceso;
+//    }
+
+    public void setTxtSiguienteProceso(String txtSiguienteProceso) {
+        this.txtSiguienteProceso = txtSiguienteProceso;
+    }
     
-    public int getTxtSiguienteProceso() {
+    public void setTxtGuardandoContexto(String txtGuardandoContexto) {
+        this.TxtGuardandoContexto = txtGuardandoContexto;
+    }
+    
+    public void setTxtProcesando(String txtProcesando) {
+        this.TxtProcesando = txtProcesando;
+    }
+    
+    
+ 
+    public String getTxtProcesando() {
+        return TxtProcesando;
+    }
+    
+    public String getTxtSiguienteProceso() {
         return txtSiguienteProceso;
     }
 
-    public void setTxtSiguienteProceso(int txtSiguienteProceso) {
-        this.txtSiguienteProceso = txtSiguienteProceso;
-    }
-    public int getTxtProcesando() {
-        return TxtProcesando;
-    }
-
-    public void setTxtProcesando(int TxtProcesando) {
-        this.TxtProcesando = TxtProcesando;
-    }
+//    public void setTxtProcesando(int TxtProcesando) {
+//        this.TxtProcesando = TxtProcesando;
+//    }
     
     public int getProcesosTotalesTerminados() {
         return procesosTotalesTerminados;
     }
-    public void setTxtGuardandoContexto(int TxtGuardandoContexto) {
-        this.TxtGuardandoContexto = TxtGuardandoContexto;
-    }
+//    public void setTxtGuardandoContexto(int TxtGuardandoContexto) {
+//        this.TxtGuardandoContexto = TxtGuardandoContexto;
+//    }
     
-    public int getTxtGuardandoContexto() {
+    public String getTxtGuardandoContexto() {
         return TxtGuardandoContexto;
     }
-    public void setTxtCargandoContexto(int TxtCargandoContexto) {
-        this.TxtCargandoContexto = TxtCargandoContexto;
-    } 
-    public int getTxtCargandoContexto() {
+//    public void setTxtCargandoContexto(int TxtCargandoContexto) {
+//        this.TxtCargandoContexto = TxtCargandoContexto;
+//    } 
+    public String getTxtCargandoContexto() {
         return TxtCargandoContexto;
     }
  

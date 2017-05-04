@@ -40,19 +40,19 @@ public class Interfaz extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {  
                 jTextField1.setSize(100, 24);
-                jTextField1.setText(String.valueOf(calendar.getTxtProcesando()));
+                jTextField1.setText(calendar.getTxtProcesando());
                 jTextField2.setSize(100, 24);
-                jTextField2.setText(String.valueOf(calendar.getTxtSiguienteProceso()));
+                jTextField2.setText(calendar.getTxtSiguienteProceso());
                 
                 jTextField3.setSize(100, 24);
-                if (calendar.getTxtGuardandoContexto() != 0) { 
-                    jTextField3.setText(String.valueOf(calendar.getTxtGuardandoContexto()));
+                if (calendar.getTxtGuardandoContexto() != "0") { 
+                    jTextField3.setText(calendar.getTxtGuardandoContexto());
                 } else {
                     jTextField3.setText("");
                 }
                 jTextField4.setSize(100, 24);
-                if (calendar.getTxtCargandoContexto() != 0) { 
-                    jTextField4.setText(String.valueOf(calendar.getTxtCargandoContexto()));
+                if (calendar.getTxtCargandoContexto() != "0") { 
+                    jTextField4.setText(calendar.getTxtCargandoContexto());
                 } else {
                     jTextField4.setText("");
                 }
